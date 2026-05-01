@@ -30,7 +30,6 @@
       text-transform: uppercase;
       font-size: 11px;
       color: #00D8F0;
-      margin-right: 40px;
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -41,53 +40,6 @@
       background: #00D8F0;
       border-radius: 50%;
       box-shadow: 0 0 0 3px rgba(0,216,240,0.2);
-    }
-    .proto-bar__tabs {
-      display: flex;
-      gap: 4px;
-      height: 100%;
-      align-items: center;
-    }
-    .proto-tab {
-      background: transparent;
-      border: none;
-      color: rgba(255,255,255,0.6);
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      letter-spacing: 0.2px;
-      transition: background .15s, color .15s;
-      white-space: nowrap;
-    }
-    .proto-tab:hover { color: #fff; background: rgba(255,255,255,0.06); }
-    .proto-tab.is-active { background: rgba(0,216,240,0.14); color: #00D8F0; }
-    .proto-tab__badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 20px; height: 18px;
-      padding: 0 6px;
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      font-variant-numeric: tabular-nums;
-    }
-    .proto-tab.is-active .proto-tab__badge { background: rgba(0,216,240,0.25); color: #00D8F0; }
-    .proto-tab__kind {
-      font-size: 10px;
-      color: rgba(255,255,255,0.4);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-left: 4px;
     }
     .proto-bar__spacer { flex: 1; }
     .proto-bar__page {
@@ -110,14 +62,6 @@
       letter-spacing: 0.2px;
     }
     .proto-bar__page button.is-active { background: #fff; color: #0E0F24; }
-    .proto-bar__meta {
-      font-size: 11px;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      margin-left: 24px;
-      font-variant-numeric: tabular-nums;
-    }
 
     .page-wrap {
       max-width: 1440px;
@@ -125,7 +69,6 @@
       background: #fff;
       box-shadow: 0 4px 40px rgba(0,0,0,0.08);
     }
-    .page-wrap.v2-wrap { background: #fff; }
   </style>
 </head>
 <body>
@@ -133,9 +76,6 @@
 
 <script>
   const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
-    "heroStyle": "photo",
-    "statsStyle": "icons",
-    "variant": "v2",
     "v2HeroStyle": "fullbleed",
     "v2Tone": "quiet"
   }/*EDITMODE-END*/;
@@ -146,8 +86,6 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <script type="text/babel" src="shared.jsx"></script>
-<script type="text/babel" src="landing.jsx"></script>
-<script type="text/babel" src="programme.jsx"></script>
 <script type="text/babel" src="landing_v2.jsx"></script>
 <script type="text/babel" src="programme_v2.jsx"></script>
 
@@ -164,18 +102,7 @@ function TweaksPanel({ state, setState, enabled }) {
     <div className="tweaks-panel">
       <h3>Tweaks</h3>
       <div className="tweaks-group">
-        <label>Variant</label>
-        <div className="tweaks-options">
-          {[
-            ['v1', 'V1 · Core'],
-            ['v2', 'V2 · Editorial'],
-          ].map(([v,l]) => (
-            <button key={v} className={state.variant===v?'active':''} onClick={()=>update('variant',v)}>{l}</button>
-          ))}
-        </div>
-      </div>
-      <div className="tweaks-group">
-        <label>V2 Hero style</label>
+        <label>Hero style</label>
         <div className="tweaks-options">
           {['fullbleed','split','type','offset'].map(v => (
             <button key={v} className={state.v2HeroStyle===v?'active':''} onClick={()=>update('v2HeroStyle',v)}>{v}</button>
@@ -183,26 +110,10 @@ function TweaksPanel({ state, setState, enabled }) {
         </div>
       </div>
       <div className="tweaks-group">
-        <label>V2 Tone</label>
+        <label>Tone</label>
         <div className="tweaks-options">
           {['quiet','punchy','image'].map(v => (
             <button key={v} className={state.v2Tone===v?'active':''} onClick={()=>update('v2Tone',v)}>{v}</button>
-          ))}
-        </div>
-      </div>
-      <div className="tweaks-group">
-        <label>Hero style (V1)</label>
-        <div className="tweaks-options">
-          {['photo','solid','gradient','fullbleed','boxed'].map(v => (
-            <button key={v} className={state.heroStyle===v?'active':''} onClick={()=>update('heroStyle',v)}>{v}</button>
-          ))}
-        </div>
-      </div>
-      <div className="tweaks-group">
-        <label>Stats treatment (V1)</label>
-        <div className="tweaks-options">
-          {['icons','numbers','large'].map(v => (
-            <button key={v} className={state.statsStyle===v?'active':''} onClick={()=>update('statsStyle',v)}>{v}</button>
           ))}
         </div>
       </div>
@@ -210,27 +121,10 @@ function TweaksPanel({ state, setState, enabled }) {
   );
 }
 
-function ProtoBar({ variant, setVariant, page, setPage }) {
-  const variants = [
-    { id: 'v1', label: 'V1 · Core', kind: 'Baseline' },
-    { id: 'v2', label: 'V2 · Editorial', kind: 'Alt direction' },
-  ];
+function ProtoBar({ page, setPage }) {
   return (
     <div className="proto-bar">
       <span className="proto-bar__brand">Prototype</span>
-      <div className="proto-bar__tabs">
-        {variants.map((v, i) => (
-          <button
-            key={v.id}
-            className={`proto-tab ${variant === v.id ? 'is-active' : ''}`}
-            onClick={() => setVariant(v.id)}
-          >
-            <span className="proto-tab__badge">{String(i+1).padStart(2,'0')}</span>
-            {v.label}
-            <span className="proto-tab__kind">{v.kind}</span>
-          </button>
-        ))}
-      </div>
       <div className="proto-bar__spacer" />
       <div className="proto-bar__page">
         <button className={page==='landing'?'is-active':''} onClick={()=>setPage('landing')}>Landing</button>
@@ -243,17 +137,9 @@ function ProtoBar({ variant, setVariant, page, setPage }) {
 function App() {
   const [page, setPage] = useState(() => localStorage.getItem('cruk-page') || 'landing');
   const [tweaks, setTweaks] = useState(TWEAKS_DEFAULTS);
-  const [variant, setVariantState] = useState(() => localStorage.getItem('cruk-variant') || TWEAKS_DEFAULTS.variant || 'v1');
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => { localStorage.setItem('cruk-page', page); window.scrollTo(0,0); }, [page]);
-  useEffect(() => { localStorage.setItem('cruk-variant', variant); window.scrollTo(0,0); }, [variant]);
-
-  const setVariant = (v) => {
-    setVariantState(v);
-    setTweaks(s => ({ ...s, variant: v }));
-    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { variant: v } }, '*');
-  };
 
   useEffect(() => {
     const handler = (e) => {
@@ -266,24 +152,17 @@ function App() {
     return () => window.removeEventListener('message', handler);
   }, []);
 
-  let pageEl;
-  if (variant === 'v2') {
-    pageEl = page === 'landing'
-      ? <LandingPageV2 onNav={setPage} heroStyle={tweaks.v2HeroStyle} tone={tweaks.v2Tone} />
-      : <ProgrammePageV2 onNav={setPage} heroStyle={tweaks.v2HeroStyle} tone={tweaks.v2Tone} />;
-  } else {
-    pageEl = page === 'landing'
-      ? <LandingPage heroStyle={tweaks.heroStyle} statsStyle={tweaks.statsStyle} onNav={setPage} />
-      : <ProgrammePage heroStyle={tweaks.heroStyle} statsStyle={tweaks.statsStyle} onNav={setPage} />;
-  }
+  const pageEl = page === 'landing'
+    ? <LandingPageV2 onNav={setPage} heroStyle={tweaks.v2HeroStyle} tone={tweaks.v2Tone} />
+    : <ProgrammePageV2 onNav={setPage} heroStyle={tweaks.v2HeroStyle} tone={tweaks.v2Tone} />;
 
   return (
     <div className="app-shell">
-      <ProtoBar variant={variant} setVariant={setVariant} page={page} setPage={setPage} />
-      <div className={`page-wrap ${variant === 'v2' ? 'v2-wrap' : ''}`}>
+      <ProtoBar page={page} setPage={setPage} />
+      <div className="page-wrap">
         {pageEl}
       </div>
-      <TweaksPanel state={{...tweaks, variant}} setState={setTweaks} enabled={editMode} />
+      <TweaksPanel state={tweaks} setState={setTweaks} enabled={editMode} />
     </div>
   );
 }
