@@ -555,7 +555,7 @@
   left: 0;
   width: 2px;
   height: var(--rail-line-h, 0px);
-  background: #C4B5FD;
+  background: #DDD6FE;
 }
 .v2 .v2-apply__raildot {
   position: absolute;
@@ -567,8 +567,8 @@
   margin-left: -5px;
   margin-top: -6px;
   border-radius: 50%;
-  background: #C4B5FD;
-  box-shadow: 0 0 0 4px rgba(196, 181, 253, 0.25);
+  background: #DDD6FE;
+  box-shadow: 0 0 0 4px rgba(221, 214, 254, 0.30);
 }
 
 /* LEFT — text items stack with 50svh overlap */
