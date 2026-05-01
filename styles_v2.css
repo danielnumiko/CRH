@@ -66,6 +66,7 @@
 
 /* ───────── Stats ───────── */
 .v2 .v2-stats {
+  --cyan: var(--cyan-on-dark);
   background: var(--navy);
   color: #fff;
   padding: 80px 50px;
@@ -952,6 +953,7 @@
 
 /* ───────── Hero — Full-bleed ───────── */
 .v2 .v2h-full {
+  --cyan: var(--cyan-on-dark);
   position: relative;
   min-height: 620px;
   background: var(--navy);
@@ -1016,6 +1018,7 @@
 
 /* ───────── Hero — Offset card ───────── */
 .v2 .v2h-offset {
+  --cyan: var(--cyan-on-dark);
   position: relative;
   min-height: 560px;
   background: var(--navy);
@@ -1070,6 +1073,7 @@
 
 /* ───────── Hero — Poster ───────── */
 .v2 .v2h-poster {
+  --cyan: var(--cyan-on-dark);
   position: relative;
   background: var(--navy);
   color: #fff;
@@ -1416,6 +1420,7 @@
   position: relative;
 }
 .v2 .v2-elig__card--cta {
+  --cyan: var(--cyan-on-dark);
   background: var(--navy);
   border-color: var(--navy);
   color: #fff;
@@ -1645,6 +1650,7 @@
 
 /* ───────── CTA ───────── */
 .v2 .v2-cta {
+  --cyan: var(--cyan-on-dark);
   background: var(--navy);
   color: #fff;
   padding: 80px 50px;

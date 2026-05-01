@@ -34,7 +34,8 @@
   --ink-2: #000026;        /* body text */
   --navy: #00007E;         /* primary brand */
   --navy-ink: #0E0F24;
-  --cyan: #A78BFA;         /* link accent */
+  --cyan: #7C3AED;         /* accent on LIGHT bgs (5.65:1 on white) */
+  --cyan-on-dark: #A78BFA; /* accent on DARK bgs (5.50:1 on navy, 6.49:1 on ink) */
   --blue-mid: #3333CC;     /* mid electric blue */
   --off: #FAFAFA;
   --rule: rgba(14,15,36,0.1);
@@ -77,6 +78,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ———————————— Header ———————————— */
 .header {
+  --cyan: var(--cyan-on-dark);
   background: var(--ink);
   color: #fff;
   height: 150px;
@@ -193,6 +195,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ———————————— Sub nav ———————————— */
 .subnav {
+  --cyan: var(--cyan-on-dark);
   background: var(--ink);
   color: #fff;
   padding: 28px 50px;
@@ -633,7 +636,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .teaser__body { font-size: 16px; line-height: 1.45; color: var(--ink-2); margin: 0; }
 
 /* ———————————— Footer ———————————— */
-.footer { background: var(--ink); color: #fff; padding: 30px 0 40px; }
+.footer { --cyan: var(--cyan-on-dark); background: var(--ink); color: #fff; padding: 30px 0 40px; }
 .footer__top {
   padding: 50px;
   display: flex;

@@ -79,7 +79,6 @@ const Header = ({ page, onNav }) => (
       <a href="#">Researchers</a>
       <a
         href="#"
-        className={page === 'landing' || page === 'programme' ? 'is-active' : ''}
         onClick={(e) => { e.preventDefault(); onNav && onNav('landing'); }}
       >Partnering</a>
       <a href="#">Investors</a>
