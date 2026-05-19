@@ -1,0 +1,442 @@
+/* ═══════════════════════════════════════════════════════════════
+   Prototype shell — chrome around the design (tab bar, viewport
+   toggle, frame). Pulled out of inline styles into its own
+   stylesheet so the shell is themable on its own.
+   ═══════════════════════════════════════════════════════════════ */
+
+body { background: #e7e7e9; min-height: 100vh; margin: 0; }
+.app-shell { background: #e7e7e9; min-height: 100vh; }
+
+/* ── Top bar ──────────────────────────────────────── */
+.proto-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink, #0E0F24);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 28px;
+  height: 56px;
+  font-family: var(--font-sans, 'Poppins', sans-serif);
+  font-size: var(--text-meta, 13px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.proto-bar__brand {
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: var(--text-micro, 11px);
+  color: var(--cyan-on-dark, #A78BFA);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 8px;
+}
+.proto-bar__brand::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--cyan-on-dark, #A78BFA);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(167,139,250,0.30);
+}
+.proto-bar__tabs {
+  display: inline-flex;
+  gap: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 3px;
+}
+.proto-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.65);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.proto-tab:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.proto-tab.is-active { background: #fff; color: var(--ink, #0E0F24); }
+
+.proto-bar__spacer { flex: 1; }
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
+  vertical-align: middle;
+}
+
+/* ── Viewport size toggle ─────────────────────────── */
+.proto-viewport {
+  display: inline-flex;
+  align-items: stretch;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+.proto-viewport__btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  border: 0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  line-height: 1;
+}
+.proto-viewport__btn .material-symbols-outlined { font-size: 16px; }
+.proto-viewport__btn:hover { color: #fff; }
+.proto-viewport__btn.is-active { background: #fff; color: var(--ink, #0E0F24); }
+@media (max-width: 720px) { .proto-viewport__label { display: none; } }
+
+/* ── Stage — frame around the design ──────────────── */
+.proto-stage { background: transparent; padding: 24px 0 40px; min-height: calc(100vh - 56px); display: flex; justify-content: center; }
+.proto-stage--desktop { padding: 24px 0 40px; }
+.proto-stage__frame {
+  background: #fff;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1440px;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+  /* Establishes the container for type-scale stepping (see tokens.css) */
+  container-type: inline-size;
+  container-name: stage;
+}
+
+/* Tablet — 768px frame, scaled by container queries in tokens.css */
+.proto-stage--tablet .proto-stage__frame {
+  max-width: 768px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px -16px rgba(15,23,42,0.30), 0 0 0 1px rgba(15,23,42,0.08);
+}
+
+/* Mobile — 375px frame */
+.proto-stage--mobile .proto-stage__frame {
+  max-width: 375px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px -16px rgba(15,23,42,0.30), 0 0 0 1px rgba(15,23,42,0.08);
+}
+
+/* ── Styles reference page ────────────────────────── */
+.styles-doc {
+  background: #fff;
+  color: var(--ink, #0E0F24);
+  font-family: var(--font-sans);
+}
+.styles-doc .container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--gutter, 50px);
+}
+.styles-hero {
+  background: var(--off);
+  padding: var(--space-18, 72px) 0 var(--space-12, 48px);
+  border-bottom: 1px solid var(--rule);
+}
+.styles-hero__kicker {
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--navy);
+  padding-top: 10px;
+  border-top: 2px solid var(--cyan);
+  width: fit-content;
+  margin: 0 0 var(--space-6, 24px);
+}
+.styles-hero__title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--text-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: var(--tracking-display);
+  color: var(--navy);
+  margin: 0 0 var(--space-5, 20px);
+}
+.styles-hero__lede {
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--ink-2);
+  max-width: 720px;
+  margin: 0;
+}
+.styles-hero__lede code,
+.styles-intro code,
+.styles-meta code,
+.swatch__token,
+.space-row__token {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
+  padding: 1px 6px;
+  color: var(--navy);
+}
+
+.styles-section { padding: var(--space-18, 72px) 0; border-bottom: 1px solid var(--rule); }
+.styles-section--paper { background: var(--off); }
+.styles-section .styles-h2 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--text-h2);
+  line-height: var(--lh-h2);
+  letter-spacing: var(--tracking-display);
+  color: var(--navy);
+  margin: 0 0 var(--space-8, 32px);
+}
+.styles-intro {
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 760px;
+  margin: -8px 0 var(--space-8, 32px);
+}
+
+/* Type scale rows */
+.scale-row {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-8, 32px);
+  padding: var(--space-7, 28px) 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+.scale-row:last-of-type { border-bottom: 1px solid var(--rule); }
+.scale-row__meta { display: flex; flex-direction: column; gap: 6px; }
+.scale-row__token {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+}
+.scale-row__spec, .scale-row__sizes {
+  font-size: 13px;
+  color: var(--ink-2);
+  opacity: 0.7;
+}
+.scale-row__sample { color: var(--navy); overflow: hidden; }
+@container stage (max-width: 767px) {
+  .scale-row { grid-template-columns: 1fr; gap: var(--space-3); }
+}
+
+/* Card grid for tokens */
+.styles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6, 24px);
+}
+.styles-card {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
+  padding: var(--space-6, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+}
+.styles-section--paper .styles-card { background: #fff; }
+.styles-card__label {
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.styles-card__sample { color: var(--navy); }
+.styles-meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+  margin: 0;
+  font-size: 13px;
+}
+.styles-meta dt { color: var(--ink-2); opacity: 0.65; font-weight: 400; }
+.styles-meta dd { margin: 0; color: var(--navy); font-weight: 500; }
+
+/* Colour swatches */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4, 16px);
+}
+.swatch {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+.swatch__chip { aspect-ratio: 4 / 2.5; }
+.swatch__label {
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.swatch__name { font-weight: 600; color: var(--navy); font-size: 14px; }
+.swatch__hex {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--ink-2);
+  opacity: 0.7;
+}
+.swatch__token {
+  margin-top: 4px;
+  font-size: 11px;
+  background: var(--off);
+  border: 1px solid var(--rule);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  width: fit-content;
+}
+
+/* Spacing scale */
+.space-grid { display: flex; flex-direction: column; }
+.space-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 70px;
+  gap: var(--space-6, 24px);
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+}
+.space-row:last-of-type { border-bottom: 1px solid var(--rule); }
+.space-row__token {
+  font-weight: 600;
+  color: var(--navy);
+}
+.space-row__bar {
+  display: block;
+  height: 14px;
+  background: rgba(14,15,36,0.05);
+  border-radius: var(--radius-xs);
+  position: relative;
+}
+.space-row__bar span {
+  display: block;
+  height: 100%;
+  background: var(--navy);
+  border-radius: var(--radius-xs);
+}
+.space-row__px {
+  font-variant-numeric: tabular-nums;
+  color: var(--navy);
+  font-weight: 500;
+  text-align: right;
+}
+@container stage (max-width: 600px) {
+  .space-row { grid-template-columns: 100px 1fr 60px; gap: 12px; }
+}
+
+/* ── Tweaks panel ─────────────────────────────────── */
+.tweaks-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 280px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+  padding: 18px 18px 20px;
+  font-family: var(--font-sans);
+  z-index: 200;
+}
+.tweaks-panel h3 {
+  margin: 0 0 14px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.tweaks-group { margin-bottom: 16px; }
+.tweaks-group:last-child { margin-bottom: 0; }
+.tweaks-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+.tweaks-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.tweaks-options button {
+  appearance: none;
+  background: var(--off);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.tweaks-options button.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+
+/* Tablet/mobile frame — allow sticky to escape for apply section */
+.proto-stage--tablet .proto-stage__frame,
+.proto-stage--mobile .proto-stage__frame { overflow: visible !important; }
+
+
+/* Proto stage scrolls independently of the prototype menu bar */
+.proto-bar { position: relative !important; top: auto !important; }
+.proto-stage {
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* Proto bar fixed at top; page scrolls naturally beneath it */
+.proto-bar { position: fixed !important; top: 0 !important; left: 0; right: 0; z-index: 100; }
+.proto-stage { height: auto !important; overflow: visible !important; margin-top: 56px; }
+
+
+/* Final: proto bar in normal flow at top; stage scrolls inside its own area */
+.proto-bar { position: relative !important; top: auto !important; left: auto !important; right: auto !important; z-index: 100; }
+.proto-stage { height: calc(100dvh - 56px) !important; overflow-y: auto !important; overflow-x: hidden !important; margin-top: 0 !important; }
+html, body { overflow: hidden !important; height: 100% !important; }
+
+
+/* Tablet/mobile — remove proto-stage top padding so sticky reaches scroll-container top */
+.proto-stage--tablet,
+.proto-stage--mobile { padding-top: 0 !important; }

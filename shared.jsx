@@ -79,6 +79,7 @@ const Header = ({ page, onNav }) => (
       <a href="#">Researchers</a>
       <a
         href="#"
+        className={page === 'landing' || page === 'programme' ? 'is-active' : ''}
         onClick={(e) => { e.preventDefault(); onNav && onNav('landing'); }}
       >Partnering</a>
       <a href="#">Investors</a>
@@ -88,6 +89,10 @@ const Header = ({ page, onNav }) => (
       <a href="#">Contact</a>
       <span className="header__search"><SearchIcon size={20} /></span>
     </nav>
+      <div className="header__menu" aria-hidden="false">
+        <button className="header__menu-btn" type="button" aria-label="Search"><span className="material-symbols-outlined">search</span></button>
+        <button className="header__menu-btn" type="button" aria-label="Open menu"><span className="material-symbols-outlined">menu</span></button>
+      </div>
   </header>
 );
 
@@ -107,8 +112,17 @@ const SubNav = ({ onNav, page, showLabel }) => {
         className={page === 'programme' ? 'is-active' : ''}
         href="#"
         onClick={(e) => { e.preventDefault(); onNav && onNav('programme'); }}
-      >Programme details</a>
-      <a href="#" onClick={(e) => e.preventDefault()}>FAQs</a>
+      ><span className="subnav__txt">Programme details</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">FAQs</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Eligibility</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Curriculum</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">How to apply</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Cohort 2026</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Alumni network</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Mentors</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Demo Day</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Past cohorts</span></a>
+      <a href="#" onClick={(e) => e.preventDefault()}><span className="subnav__txt">Contact team</span></a>
     </div>
   );
 };
@@ -192,18 +206,15 @@ const Teasers = () => (
     <div className="teasers__grid">
       <div className="teaser">
         <div className="teaser__img" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=900&q=80')" }} />
-        <h3 className="teaser__title">Researchers</h3>
-        <p className="teaser__body">We support innovative research that can benefit society. Let us help you turn your ideas into meaningful progress for patients.</p>
+        <div className="teaser__text"><h3 className="teaser__title">Researchers</h3><p className="teaser__body">We support innovative research that can benefit society. Let us help you turn your ideas into meaningful progress for patients.</p></div>
       </div>
       <div className="teaser">
         <div className="teaser__img" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1581093588401-fbb62a02f120?auto=format&fit=crop&w=900&q=80')" }} />
-        <h3 className="teaser__title">Our start-up portfolio</h3>
-        <p className="teaser__body">With a growing portfolio of start-ups, we're bringing together the community to spark the next breakthrough in cancer research.</p>
+        <div className="teaser__text"><h3 className="teaser__title">Our start-up portfolio</h3><p className="teaser__body">With a growing portfolio of start-ups, we're bringing together the community to spark the next breakthrough in cancer research.</p></div>
       </div>
       <div className="teaser">
         <div className="teaser__img" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=900&q=80')" }} />
-        <h3 className="teaser__title">Events</h3>
-        <p className="teaser__body">Through our network, you can access a range of scientific conferences, networking and other events aimed at researchers, partners and investors.</p>
+        <div className="teaser__text"><h3 className="teaser__title">Events</h3><p className="teaser__body">Through our network, you can access a range of scientific conferences, networking and other events aimed at researchers, partners and investors.</p></div>
       </div>
     </div>
   </section>

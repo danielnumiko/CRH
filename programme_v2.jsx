@@ -28,9 +28,13 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
       };
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
+      const scroller = document.querySelector('.proto-stage');
+      if (scroller) scroller.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
       return () => {
         window.removeEventListener('scroll', onScroll);
+        const scroller = document.querySelector('.proto-stage');
+        if (scroller) scroller.removeEventListener('scroll', onScroll);
         window.removeEventListener('resize', onScroll);
       };
     }, [id, steps]);
@@ -119,9 +123,13 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+      const scroller = document.querySelector('.proto-stage');
+      if (scroller) scroller.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     return () => {
       window.removeEventListener('scroll', onScroll);
+        const scroller = document.querySelector('.proto-stage');
+        if (scroller) scroller.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
   }, []);
@@ -204,11 +212,9 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
 
       {/* ── CRUMBS (restored from V1) ── */}
       <nav className="crumbs">
-        <a href="#">Cancer Research Horizons</a>
-        <span className="sep"><CrumbChevron /></span>
-        <a href="#" onClick={(e) => { e.preventDefault(); onNav && onNav('landing'); }}>Therapeutics Accelerator</a>
-        <span className="sep"><CrumbChevron /></span>
-        <span className="current">Programme details</span>
+        <a href="#"><span>Cancer Research Horizons</span><span className="sep"><CrumbChevron /></span></a>
+        <a href="#" onClick={(e) => { e.preventDefault(); onNav && onNav('landing'); }}><span>Therapeutics Accelerator</span><span className="sep"><CrumbChevron /></span></a>
+        <span className="current"><span>Programme details</span><span className="sep"><CrumbChevron /></span></span>
       </nav>
 
       {/* ── Editorial About strip ── */}
@@ -316,6 +322,23 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
 
             {/* Scroll region: 2 equal columns (text · image) with rail centred between */}
             <div className="v2-apply__body">
+
+              {/* Column 2 — sticky image that crossfades */}
+              <div className="v2-apply__sticky">
+                <div className="v2-apply__media" aria-hidden="true">
+                  {imgs.map((src, i) => (
+                    <div
+                      key={i}
+                      className={`v2-apply__pane ${i === applyStep ? 'is-active' : ''}`}
+                      style={{ '--pane-img': `url("${src}")` }}
+                    >
+                      <span className="v2-apply__mlabel">Step {String(i + 1).padStart(2, '0')}</span>
+                      <h4 className="v2-apply__mtitle">{steps[i].short || steps[i].h}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
               {/* Centre rail — line from body-top to dot (pinned at viewport centre) */}
               <div className="v2-apply__rail" aria-hidden="true">
                 <div className="v2-apply__railline" />
@@ -340,6 +363,10 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
               </div>
 
               {/* Column 1 — text items with 50vh overlap, right-aligned */}
+                            {/* Carousel progress (ABOVE cards on tablet/mobile) */}
+              <div className="v2-apply__progress-row" aria-hidden="true">
+                <div className="v2-apply__progress"><div className="v2-apply__progress-bar"></div></div>
+              </div>
               <ol className="v2-apply__list">
                 {steps.map((s, i) => (
                   <li
@@ -355,20 +382,28 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
                 ))}
               </ol>
 
-              {/* Column 2 — sticky image that crossfades */}
-              <div className="v2-apply__sticky">
-                <div className="v2-apply__media" aria-hidden="true">
-                  {imgs.map((src, i) => (
-                    <div
-                      key={i}
-                      className={`v2-apply__pane ${i === applyStep ? 'is-active' : ''}`}
-                      style={{ '--pane-img': `url("${src}")` }}
-                    >
-                      <span className="v2-apply__mlabel">Step {String(i + 1).padStart(2, '0')}</span>
-                      <h4 className="v2-apply__mtitle">{steps[i].short || steps[i].h}</h4>
-                    </div>
-                  ))}
-                </div>
+              {/* Carousel arrows (BELOW cards on tablet/mobile) */}
+              <div className="v2-apply__arrows-row">
+                <button
+                  className="v2-apply__arrow"
+                  type="button"
+                  aria-label="Previous step"
+                  onClick={() => {
+                    const list = document.querySelector('#apply .v2-apply__list');
+                    if (!list) return;
+                    list.scrollBy({ left: -list.clientWidth * 0.88, behavior: 'smooth' });
+                  }}
+                ><span className="material-symbols-outlined">arrow_back</span></button>
+                <button
+                  className="v2-apply__arrow"
+                  type="button"
+                  aria-label="Next step"
+                  onClick={() => {
+                    const list = document.querySelector('#apply .v2-apply__list');
+                    if (!list) return;
+                    list.scrollBy({ left: list.clientWidth * 0.88, behavior: 'smooth' });
+                  }}
+                ><span className="material-symbols-outlined">arrow_forward</span></button>
               </div>
             </div>
           </section>
@@ -495,11 +530,7 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
             );
           })}
         </div>
-        <div className="v2-faq__foot">
-          <p>Can't find the answer you're looking for?</p>
-          <button className="btn">Contact the team</button>
-        </div>
-      </section>
+        </section>
 
       {/* ── REWORKED: navy CTA band ── */}
       <section className="v2-cta">
