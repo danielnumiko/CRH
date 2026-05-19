@@ -2562,7 +2562,7 @@
     list-style: none !important;
     margin: 0 !important;
     padding: var(--space-10) var(--gutter) 0 !important;
-    gap: var(--space-12) !important;
+    gap: var(--space-16) !important;
     max-width: 720px !important;
     overflow: visible !important;
     scroll-snap-type: none !important;
