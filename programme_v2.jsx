@@ -4,6 +4,95 @@
 // REWORKED: hero (3 options via prop), breadcrumb/rail, Eligibility (card grid),
 //           Curriculum (pillar rows), FAQs (inline accordion), CTA (navy band).
 
+/* ----- Generic horizontal-scroll carousel with pips + arrows -----
+   Shown at ≤1279px via CSS rules on .v2-inc__grid / .v2-elig__grid.
+   Arrows scroll by ~one card; pips reflect the closest card to the
+   container's leading edge.                                       */
+const Carousel = ({ gridClass, items, renderItem }) => {
+  const ref = React.useRef(null);
+  const [active, setActive] = React.useState(0);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const cards = el.querySelectorAll(':scope > *');
+      if (!cards.length) return;
+      const left = el.scrollLeft + el.clientLeft;
+      let best = 0;
+      let bestDist = Infinity;
+      cards.forEach((c, i) => {
+        const dist = Math.abs(c.offsetLeft - left);
+        if (dist < bestDist) { bestDist = dist; best = i; }
+      });
+      setActive(best);
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      el.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [items.length]);
+
+  const scrollBy = (dir) => {
+    const el = ref.current;
+    if (!el) return;
+    const first = el.querySelector(':scope > *');
+    const cardW = first ? first.getBoundingClientRect().width : el.clientWidth * 0.45;
+    const gap = parseFloat(getComputedStyle(el).columnGap || '16') || 16;
+    el.scrollBy({ left: dir * (cardW + gap), behavior: 'smooth' });
+  };
+
+  const onPip = (i) => {
+    const el = ref.current;
+    if (!el) return;
+    const cards = el.querySelectorAll(':scope > *');
+    if (!cards[i]) return;
+    el.scrollTo({ left: cards[i].offsetLeft, behavior: 'smooth' });
+  };
+
+  return (
+    <div className={`${gridClass}__carousel`}>
+      <div className={`${gridClass}__pips`} role="tablist" aria-hidden="false">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`${gridClass}__pip ${i === active ? 'is-active' : ''}`}
+            aria-label={`Go to slide ${i + 1}`}
+            aria-selected={i === active}
+            role="tab"
+            onClick={() => onPip(i)}
+          />
+        ))}
+      </div>
+      <div className={gridClass} ref={ref}>
+        {items.map(renderItem)}
+      </div>
+      <div className={`${gridClass}__nav`}>
+        <button
+          type="button"
+          className={`${gridClass}__arrow`}
+          aria-label="Previous"
+          onClick={() => scrollBy(-1)}
+        >
+          <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        </button>
+        <button
+          type="button"
+          className={`${gridClass}__arrow`}
+          aria-label="Next"
+          onClick={() => scrollBy(1)}
+        >
+          <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
   const [openFaq, setOpenFaq] = React.useState(-1);
   const [applyStep, setApplyStep] = React.useState(0);
@@ -226,72 +315,62 @@ const ProgrammePageV2 = ({ onNav, heroStyle = 'classic', tone = 'quiet' }) => {
         </div>
       </section>
 
-      {/* ── What's included — simple 4-card grid ── */}
+      {/* ── What's included — simple 4-card grid (carousel at ≤1279px) ── */}
       <section className="v2-inc" id="included">
         <div className="v2-inc__head">
           <h2 className="v2-inc__title">Four phases over four&nbsp;months.</h2>
           <p className="v2-inc__lede">The pilot supports three to five teams from September 2026 — a structured journey from bootcamp through Demo Day and into the alumni network.</p>
         </div>
-        <div className="v2-inc__grid">
-          {[
+        <Carousel
+          gridClass="v2-inc__grid"
+          items={[
             { n: '01', h: 'Pre-accelerator',   p: "Three-day bootcamp on entrepreneurial and business training, followed by market exploration.",                  meta: 'Month 1 · 3 days in London' },
             { n: '02', h: 'Acceleration',      p: "Structured programme with tailored mentorship, technical support and monthly in-person days in London.",         meta: 'Months 2–3 · Monthly, in person' },
             { n: '03', h: 'Demo Day',          p: "Showcase your start-up to investors and collaborators — compete for two Prize Awards of £250k.",                   meta: 'Month 4 · Showcase day' },
             { n: '04', h: 'Yearly conference', p: "Annual conference uniting start-ups and founders across our accelerators to foster ongoing collaboration.",         meta: 'Annual · Alumni network' },
-          ].map((s) => (
+          ]}
+          renderItem={(s) => (
             <article className="v2-inc__card" key={s.n}>
               <div className="v2-inc__num">{s.n}</div>
               <h4 className="v2-inc__ch">{s.h}</h4>
               <p className="v2-inc__cp">{s.p}</p>
               <p className="v2-inc__meta">{s.meta}</p>
             </article>
-          ))}
-        </div>
+          )}
+        />
       </section>
 
-      {/* ── REWORKED: Eligibility as a 4-card grid ── */}
+      {/* ── REWORKED: Eligibility as a 4-card grid (carousel at ≤1279px) ── */}
       <section className="v2-elig" id="eligibility">
         <div className="v2-elig__head">
           <h2 className="v2-elig__title">Who we're looking for</h2>
           <p className="v2-elig__lede">Our pilot cohort is focused on UK-based teams ready to explore company creation and other commercialisation opportunities. Later stages of the Therapeutics Accelerator will be available internationally.</p>
         </div>
-        <div className="v2-elig__grid">
-          <div className="v2-elig__card">
-            <div className="v2-elig__check">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-            </div>
-            <h4>Researchers &amp; PIs</h4>
-            <p>Late-stage PhD students, post-docs, and early principal investigators building in oncology.</p>
-          </div>
-          <div className="v2-elig__card">
-            <div className="v2-elig__check">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 21V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M3 21h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg>
-            </div>
-            <h4>Open funding base</h4>
-            <p>You do <em>not</em> have to be Cancer Research UK funded to apply — our doors are open to all qualifying UK teams.</p>
-          </div>
-          <div className="v2-elig__card">
-            <div className="v2-elig__check">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/></svg>
-            </div>
-            <h4>Early concepts</h4>
-            <p>Validated science with clear therapeutic rationale — not fully clinic-ready assets.</p>
-          </div>
-          <div className="v2-elig__card">
-            <div className="v2-elig__check">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="6" height="6" stroke="currentColor" strokeWidth="1.8"/><path d="M7 14l3 6h-6z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M14 14h6v6h-6z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
-            </div>
-            <h4>Modality agnostic</h4>
-            <p>Small molecules, biologics, cell &amp; gene therapies, radiopharmaceuticals — as long as the focus is cancer.</p>
-          </div>
-          <a href="#apply" className="v2-elig__card v2-elig__card--cta">
-            <div className="v2-elig__check">
-              <svg width="22" height="22" viewBox="0 0 18 18" fill="none"><path d="M4 14 L14 4 M14 4 H6 M14 4 V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </div>
-            <h4>Ready to apply?</h4>
-            <p>Start your application in under five minutes.</p>
-          </a>
-        </div>
+        <Carousel
+          gridClass="v2-elig__grid"
+          items={[
+            { kind: 'card', k: 'researchers', svg: <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>, h: <>Researchers &amp; PIs</>, p: 'Late-stage PhD students, post-docs, and early principal investigators building in oncology.' },
+            { kind: 'card', k: 'funding',     svg: <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 21V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M3 21h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg>, h: 'Open funding base', p: <>You do <em>not</em> have to be Cancer Research UK funded to apply — our doors are open to all qualifying UK teams.</> },
+            { kind: 'card', k: 'early',       svg: <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/></svg>, h: 'Early concepts', p: 'Validated science with clear therapeutic rationale — not fully clinic-ready assets.' },
+            { kind: 'card', k: 'modality',    svg: <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="6" height="6" stroke="currentColor" strokeWidth="1.8"/><path d="M7 14l3 6h-6z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M14 14h6v6h-6z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>, h: 'Modality agnostic', p: <>Small molecules, biologics, cell &amp; gene therapies, radiopharmaceuticals — as long as the focus is cancer.</> },
+            { kind: 'cta',  k: 'apply',       svg: <svg width="22" height="22" viewBox="0 0 18 18" fill="none"><path d="M4 14 L14 4 M14 4 H6 M14 4 V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>, h: 'Ready to apply?', p: 'Start your application in under five minutes.' },
+          ]}
+          renderItem={(it) => (
+            it.kind === 'cta' ? (
+              <a href="#apply" className="v2-elig__card v2-elig__card--cta" key={it.k}>
+                <div className="v2-elig__check">{it.svg}</div>
+                <h4>{it.h}</h4>
+                <p>{it.p}</p>
+              </a>
+            ) : (
+              <div className="v2-elig__card" key={it.k}>
+                <div className="v2-elig__check">{it.svg}</div>
+                <h4>{it.h}</h4>
+                <p>{it.p}</p>
+              </div>
+            )
+          )}
+        />
       </section>
 
       {/* ── How to apply — Waabi-style: centred head, scrolling text L, sticky image R, growing centre line ── */}
